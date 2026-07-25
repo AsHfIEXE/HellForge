@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  ShieldAlert, Radio, Cpu, Network, FileText, Activity, 
-  Terminal, Settings as SettingsIcon, Layers, Server, Search, Bot
-} from 'lucide-react';
-import { D3TopologyGraph } from './components/D3TopologyGraph';
-import { AssetsFeature } from './features/assets/AssetsFeature';
-import { FindingsFeature } from './features/findings/FindingsFeature';
+import { JSIntelFeature } from './features/js_intel/JSIntelFeature';
+import { SchedulesFeature } from './features/schedules/SchedulesFeature';
+import { ReportsFeature } from './features/reports/ReportsFeature';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -119,12 +114,14 @@ export default function App() {
           {[
             { id: 'overview', label: 'Overview', icon: Radio },
             { id: 'assets', label: 'Assets Inventory', icon: Server },
+            { id: 'js_intel', label: 'JS Intelligence', icon: Terminal },
             { id: 'graph', label: 'Attack Graph', icon: Network },
             { id: 'findings', label: 'Vulnerabilities', icon: ShieldAlert },
+            { id: 'schedules', label: 'Scan Schedules', icon: Layers },
             { id: 'plugins', label: 'Plugins SDK', icon: Cpu },
             { id: 'timeline', label: 'Attack Timeline', icon: Activity },
-            { id: 'ai', label: 'AI Copilot', icon: Bot },
             { id: 'reports', label: 'Reports', icon: FileText },
+            { id: 'ai', label: 'AI Copilot', icon: Bot },
           ].map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
@@ -152,6 +149,7 @@ export default function App() {
             );
           })}
         </nav>
+
 
         <div style={{ marginTop: 'auto', padding: '12px', background: 'rgba(0,0,0,0.4)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
