@@ -1,0 +1,6 @@
+name: screenshot
+version: 1.5.0
+author: HellForge Security Team
+description: Web page snapshot and visual interface classifier listening on topic http
+subscriptions:
+  - http
