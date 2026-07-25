@@ -14,22 +14,23 @@ import { ReportsFeature } from './features/reports/ReportsFeature';
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState<any>({
-    total_projects: 1,
-    total_targets: 1,
-    total_assets: 5,
-    total_vulnerabilities: 2,
-    average_risk_score: 55.0,
-    severity_breakdown: { critical: 1, high: 1, medium: 0, low: 0 }
+    total_projects: 0,
+    total_targets: 0,
+    total_assets: 0,
+    total_vulnerabilities: 0,
+    average_risk_score: 0.0,
+    severity_breakdown: { critical: 0, high: 0, medium: 0, low: 0 }
   });
   const [assets, setAssets] = useState<any[]>([]);
   const [findings, setFindings] = useState<any[]>([]);
   const [graphData, setGraphData] = useState<any>({ nodes: [], links: [] });
   const [plugins, setPlugins] = useState<any[]>([]);
   const [timeline, setTimeline] = useState<any[]>([]);
-  const [targetInput, setTargetInput] = useState('example.com');
+  const [targetInput, setTargetInput] = useState('testasp.vulnweb.com');
   const [isScanning, setIsScanning] = useState(false);
   const [aiQuery, setAiQuery] = useState('');
   const [aiResponse, setAiResponse] = useState<any>(null);
+
 
   useEffect(() => {
     fetchStats();
@@ -107,19 +108,19 @@ export default function App() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-dark)' }}>
       {/* Sidebar Navigation */}
-      <div className="glass-panel" style={{ width: '260px', padding: '20px', borderRadius: '0', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div style={{ width: '250px', background: 'var(--bg-sidebar)', padding: '24px 16px', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <div>
-          <h1 style={{ color: 'var(--accent-red)', fontSize: '1.4rem', fontWeight: 800, letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <ShieldAlert size={24} /> HELLFORGE
+          <h1 style={{ color: '#f8fafc', fontSize: '1.2rem', fontWeight: 800, letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <ShieldAlert size={22} color="var(--accent-primary)" /> HELLFORGE
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>
-            Build the attack surface.
+          <p style={{ color: 'var(--text-dim)', fontSize: '0.75rem', marginTop: '4px', fontFamily: 'var(--font-mono)' }}>
+            ATTACK SURFACE PLATFORM
           </p>
         </div>
 
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {[
             { id: 'overview', label: 'Overview', icon: Radio },
             { id: 'assets', label: 'Assets Inventory', icon: Server },
@@ -141,48 +142,47 @@ export default function App() {
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '12px',
-                  padding: '10px 14px',
-                  borderRadius: '8px',
-                  background: active ? 'rgba(0, 240, 255, 0.1)' : 'transparent',
-                  color: active ? 'var(--accent-cyan)' : 'var(--text-muted)',
-                  border: active ? '1px solid rgba(0, 240, 255, 0.3)' : '1px solid transparent',
+                  gap: '10px',
+                  padding: '9px 12px',
+                  borderRadius: '6px',
+                  background: active ? 'var(--bg-card)' : 'transparent',
+                  color: active ? 'var(--text-main)' : 'var(--text-muted)',
+                  border: active ? '1px solid var(--border-color)' : '1px solid transparent',
                   cursor: 'pointer',
-                  fontWeight: 600,
-                  fontSize: '0.9rem',
+                  fontWeight: active ? 600 : 400,
+                  fontSize: '0.85rem',
                   textAlign: 'left'
                 }}
               >
-                <Icon size={18} /> {tab.label}
+                <Icon size={16} color={active ? 'var(--accent-primary)' : 'var(--text-dim)'} /> {tab.label}
               </button>
             );
           })}
         </nav>
 
-
-        <div style={{ marginTop: 'auto', padding: '12px', background: 'rgba(0,0,0,0.4)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-            <span className="live-indicator"></span> Split Topic Bus Active
+        <div style={{ marginTop: 'auto', padding: '12px', background: 'var(--bg-dark)', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+            <span className="live-dot"></span> TOPIC EVENTBUS ACTIVE
           </div>
         </div>
       </div>
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, padding: '32px', overflowY: 'auto' }}>
+      <div style={{ flex: 1, padding: '24px 32px', overflowY: 'auto' }}>
         {/* Top Scan Bar */}
-        <div className="glass-panel" style={{ padding: '16px 24px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="pro-card" style={{ padding: '12px 20px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, maxWidth: '600px' }}>
-            <Search size={18} color="var(--text-muted)" />
+            <Search size={16} color="var(--text-dim)" />
             <input
               type="text"
               value={targetInput}
               onChange={(e) => setTargetInput(e.target.value)}
-              placeholder="Enter target domain (e.g. example.com)"
+              placeholder="Enter target domain or host..."
               style={{
                 background: 'transparent',
                 border: 'none',
                 color: 'var(--text-main)',
-                fontSize: '1rem',
+                fontSize: '0.95rem',
                 width: '100%',
                 outline: 'none',
                 fontFamily: 'var(--font-mono)'
@@ -193,48 +193,49 @@ export default function App() {
             onClick={handleStartScan}
             disabled={isScanning}
             style={{
-              background: 'linear-gradient(135deg, var(--accent-red), var(--accent-orange))',
-              color: '#fff',
+              background: 'var(--accent-primary)',
+              color: '#ffffff',
               border: 'none',
-              padding: '10px 24px',
-              borderRadius: '8px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              boxShadow: '0 0 15px rgba(255, 59, 92, 0.4)'
+              padding: '8px 20px',
+              borderRadius: '6px',
+              fontWeight: 600,
+              fontSize: '0.85rem',
+              cursor: 'pointer'
             }}
           >
-            {isScanning ? 'Executing Pipeline...' : 'Launch Scan'}
+            {isScanning ? 'Scanning Target...' : 'Execute Scan'}
           </button>
         </div>
 
         {/* Tab Content */}
         {activeTab === 'overview' && (
           <div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px', marginBottom: '24px' }}>
-              <div className="glass-panel" style={{ padding: '20px' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>TOTAL ASSETS</div>
-                <div style={{ fontSize: '2rem', fontWeight: 800, marginTop: '8px', color: 'var(--accent-cyan)' }}>{stats.total_assets}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
+              <div className="pro-card" style={{ padding: '20px' }}>
+                <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.5px' }}>TOTAL ASSETS</div>
+                <div style={{ fontSize: '1.8rem', fontWeight: 700, marginTop: '6px', color: 'var(--text-main)' }}>{stats.total_assets}</div>
               </div>
-              <div className="glass-panel" style={{ padding: '20px' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>FINDINGS</div>
-                <div style={{ fontSize: '2rem', fontWeight: 800, marginTop: '8px', color: 'var(--accent-red)' }}>{stats.total_vulnerabilities}</div>
+              <div className="pro-card" style={{ padding: '20px' }}>
+                <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.5px' }}>VULNERABILITIES</div>
+                <div style={{ fontSize: '1.8rem', fontWeight: 700, marginTop: '6px', color: 'var(--severity-critical)' }}>{stats.total_vulnerabilities}</div>
               </div>
-              <div className="glass-panel" style={{ padding: '20px' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>AVERAGE RISK SCORE</div>
-                <div style={{ fontSize: '2rem', fontWeight: 800, marginTop: '8px', color: 'var(--accent-orange)' }}>{stats.average_risk_score}/100</div>
+              <div className="pro-card" style={{ padding: '20px' }}>
+                <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.5px' }}>AVG RISK SCORE</div>
+                <div style={{ fontSize: '1.8rem', fontWeight: 700, marginTop: '6px', color: 'var(--severity-high)' }}>{stats.average_risk_score}/100</div>
               </div>
-              <div className="glass-panel" style={{ padding: '20px' }}>
-                <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>CRITICAL SEVERITY</div>
-                <div style={{ fontSize: '2rem', fontWeight: 800, marginTop: '8px', color: 'var(--accent-red)' }}>{stats.severity_breakdown.critical}</div>
+              <div className="pro-card" style={{ padding: '20px' }}>
+                <div style={{ color: 'var(--text-dim)', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.5px' }}>CRITICAL FINDINGS</div>
+                <div style={{ fontSize: '1.8rem', fontWeight: 700, marginTop: '6px', color: 'var(--severity-critical)' }}>{stats.severity_breakdown.critical}</div>
               </div>
             </div>
 
-            <div className="glass-panel" style={{ padding: '24px', marginBottom: '24px' }}>
-              <h3 style={{ fontSize: '1.1rem', marginBottom: '16px', color: 'var(--accent-cyan)' }}>Attack Surface Network Topology</h3>
+            <div className="pro-card" style={{ padding: '20px', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '0.95rem', marginBottom: '16px', color: 'var(--text-main)', fontWeight: 600 }}>Attack Surface Topology Graph</h3>
               <D3TopologyGraph data={graphData} />
             </div>
           </div>
         )}
+
 
         {activeTab === 'assets' && <AssetsFeature assets={assets} />}
         {activeTab === 'js_intel' && <JSIntelFeature />}

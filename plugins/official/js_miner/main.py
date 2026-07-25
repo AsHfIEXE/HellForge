@@ -1,5 +1,7 @@
 import os
 import asyncio
+import urllib.request
+import re
 from typing import Any
 from app.plugins.sdk import BasePlugin
 from app.core.events import event_bus_manager
@@ -14,26 +16,32 @@ class JSMinerPlugin(BasePlugin):
     async def execute(self, event_data: Any):
         if isinstance(event_data, HTTPEvent):
             subdomain = event_data.subdomain
-            await asyncio.sleep(0.1)
 
-            # Simulated JS bundle scan for target asset
-            sample_js_code = (
-                f"const API_URL = 'https://{subdomain}/api/v1/users';\n"
-                f"const AWS_KEY = 'AKIAIOSFODNN7EXAMPLE';\n"
-                f"const JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';\n"
-                f"fetch('/api/v1/internal/config');\n"
-            )
+            loop = asyncio.get_event_loop()
 
-            res = js_analyzer.analyze_script(sample_js_code)
+            def fetch_and_mine():
+                url = f"http://{subdomain}"
+                try:
+                    req = urllib.request.Request(
+                        url,
+                        headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) HellForge/1.0'}
+                    )
+                    with urllib.request.urlopen(req, timeout=3) as resp:
+                        body = resp.read(8192).decode('utf-8', errors='ignore')
+                        return js_analyzer.analyze_script(body)
+                except Exception:
+                    return {"secrets": [], "endpoints": []}
 
-            for secret in res["secrets"]:
+            res = await loop.run_in_executor(None, fetch_and_mine)
+
+            for secret in res.get("secrets", []):
                 finding_evt = FindingEvent(
                     subdomain=subdomain,
-                    title=f"Hardcoded {secret['type']} Extracted from JS Asset",
-                    severity="High" if secret["type"] == "AWS Access Key" else "Medium",
+                    title=f"Discovered {secret['type']} in Web Asset",
+                    severity="High" if secret["type"] in ["AWS Access Key", "JWT Token"] else "Medium",
                     category="Secret Leak",
-                    description=f"Automated JS Intelligence mined {secret['type']} inside static bundle code.",
-                    remediation="Rotate exposed credentials and move keys to secure environment variables.",
+                    description=f"Real-time JS Intelligence mined {secret['type']} on target {subdomain}.",
+                    remediation="Rotate exposed keys immediately and secure endpoint configuration.",
                     cvss_score=8.1 if secret["type"] == "AWS Access Key" else 6.5,
                     cve_id="CWE-798",
                     discovery_source="js_miner"
