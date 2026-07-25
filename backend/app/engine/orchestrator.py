@@ -147,6 +147,15 @@ class ArchitectedOrchestrator:
                         )
                         db.add(finding_rec)
 
+        # Record Timeline Event
+        timeline_ev = TimelineEvent(
+            domain=domain_name,
+            event_type="scan.finished",
+            title=f"Scan Finished for {domain_name}",
+            description=f"EventBus pipeline processed {len(self._assets_buffer)} assets and {len(self._findings_buffer)} security findings."
+        )
+        db.add(timeline_ev)
+
         # Finish Scan
         scan.status = "completed"
         scan.progress = 100
@@ -161,3 +170,4 @@ class ArchitectedOrchestrator:
         return scan
 
 event_orchestrator = ArchitectedOrchestrator()
+
