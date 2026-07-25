@@ -1,0 +1,6 @@
+name: subfinder
+version: 2.6.3
+author: ProjectDiscovery / HellForge
+description: Passive subdomain discovery plugin listening on topic scan
+subscriptions:
+  - scan

@@ -1,0 +1,6 @@
+name: nuclei
+version: 3.1.0
+author: ProjectDiscovery / HellForge
+description: Vulnerability scanner listening on topic http
+subscriptions:
+  - http
