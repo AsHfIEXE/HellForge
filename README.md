@@ -1,13 +1,13 @@
 <div align="center">
 
-# 🔥 HELLFORGE 🔥
+# HELLFORGE
 ### *Build the attack surface. Hunt the impossible.*
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https.opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React_18-61DAFB.svg)](https://reactjs.org)
-[![Event Driven](https://img.shields.io/badge/Architecture-Event--Driven-purple.svg)](#core-architecture)
+[![Event Driven](https://img.shields.io/badge/Architecture-Event--Driven-purple.svg)](#system-architecture)
 
 **HellForge** is a modular, event-driven Attack Surface Management (ASM) and Security Intelligence Platform. It unifies passive reconnaissance, HTTP intelligence, JavaScript secret extraction, vulnerability correlation, multi-factor risk scoring, and AI-assisted threat vector analysis into a single ecosystem.
 
@@ -15,7 +15,7 @@
 
 ---
 
-## 🎯 System Architecture
+## System Architecture
 
 ```text
                            Web Dashboard (React + Vite + Cyber UI)
@@ -54,7 +54,7 @@
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - **Event-Driven Topic Engine:** Decoupled Pub/Sub messaging prevents event flooding across unrelated plugins (`scan`, `asset`, `http`, `finding`, `risk`, `system`).
 - **Immutable DTO Contracts:** Strict Pydantic models (`ScanContext`, `AssetEvent`, `HTTPEvent`, `FindingEvent`, `RiskEvent`) ensure plugins communicate cleanly without mutating ORM state directly.
@@ -65,7 +65,7 @@
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Prerequisites
 - Python 3.10+
@@ -93,7 +93,7 @@ docker-compose up --build
 
 ---
 
-## 💻 CLI Usage
+## CLI Usage
 
 The `hellforge` CLI allows security engineers to execute scans, inspect plugin marketplaces, and run system health checks directly from the terminal.
 
@@ -119,7 +119,7 @@ python cli/hellforge_cli.py ai "Explain XSS vector on dev portal"
 
 ---
 
-## 🔌 Writing a Third-Party Plugin
+## Writing a Third-Party Plugin
 
 Plugins are self-contained modules located under `plugins/community/<plugin_name>/`.
 
@@ -164,7 +164,7 @@ class CustomSubdomainHunter(BasePlugin):
 
 ---
 
-## 🗺️ Project Roadmap & Implementation Plan
+## Project Roadmap & Implementation Plan
 
 ```text
 [Phase 1] ──► [Phase 2] ──► [Phase 3] ──► [Phase 4] ──► [Phase 5]
@@ -172,7 +172,7 @@ class CustomSubdomainHunter(BasePlugin):
  Engine          Intel         Workers & AI   RBAC          ASM
 ```
 
-### ✅ Phase 1: Core Framework (Completed)
+### Phase 1: Core Framework (Completed)
 - [x] Topic-based split event bus engine
 - [x] Immutable Pydantic DTO data contracts
 - [x] Plugin SDK with `plugin.yaml` manifest validation
@@ -184,25 +184,25 @@ class CustomSubdomainHunter(BasePlugin):
 - [x] Docker Compose deployment configuration
 - [x] Automated test suite (Pytest integration)
 
-### 🔜 Phase 2: Advanced Reconnaissance & JS Intelligence
+### Phase 2: Advanced Reconnaissance & JS Intelligence
 - [ ] Automated JavaScript bundle downloading and AST parsing for secret detection
 - [ ] Scheduled & recurring target scanning engine
 - [ ] PDF & Markdown executive report generation engine
 - [ ] Screenshot engine (playwright/puppeteer integration) with AI visual categorization
 
-### 🔮 Phase 3: Distributed Workers & Cloud Connectors
+### Phase 3: Distributed Workers & Cloud Connectors
 - [ ] Redis / NATS Message Queue backend plugin for EventBus scaling
 - [ ] Remote agent worker nodes for distributed scanning across VPCs
 - [ ] AWS, Azure, GCP, and Cloudflare asset discovery connectors
 - [ ] Local RAG AI engine over scan results using Ollama & vector databases
 
-### 🏢 Phase 4: Enterprise RBAC & Multi-Tenancy
+### Phase 4: Enterprise RBAC & Multi-Tenancy
 - [ ] Role-Based Access Control (Admin, Analyst, Auditor, Viewer)
 - [ ] Project-scoped user permissions & JWT refresh token authentication
 - [ ] Third-party integrations (Slack alerts, Jira issue creation, GitHub actions, SIEM webhooks)
 - [ ] Web-based Plugin Marketplace store UI
 
-### 🛡️ Phase 5: Continuous Attack Surface Management (EASM)
+### Phase 5: Continuous Attack Surface Management (EASM)
 - [ ] Historical asset evolution & change-delta tracking (Assets added/removed over time)
 - [ ] Exposure trend analytics & CVSS threat heatmaps
 - [ ] Automated remediation verification & SLA tracking
@@ -210,6 +210,6 @@ class CustomSubdomainHunter(BasePlugin):
 
 ---
 
-## 📜 License
+## License
 
 Distributed under the MIT License. See `LICENSE` for details.
