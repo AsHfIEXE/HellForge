@@ -164,3 +164,35 @@ class TimelineEvent(Base):
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class ScanSchedule(Base):
+    __tablename__ = "scan_schedules"
+
+    id = Column(String, primary_key=True, default=gen_uuid)
+    target_domain = Column(String, nullable=False)
+    cron_expression = Column(String, default="0 0 * * *") # Daily
+    active = Column(Boolean, default=True)
+    last_run = Column(DateTime, nullable=True)
+    next_run = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class Report(Base):
+    __tablename__ = "reports"
+
+    id = Column(String, primary_key=True, default=gen_uuid)
+    target_domain = Column(String, nullable=False)
+    format = Column(String, default="html") # html, markdown, json
+    title = Column(String, nullable=False)
+    content = Column(Text, nullable=False)
+    generated_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class AssetDiff(Base):
+    __tablename__ = "asset_diffs"
+
+    id = Column(String, primary_key=True, default=gen_uuid)
+    target_domain = Column(String, nullable=False)
+    previous_scan_id = Column(String, nullable=True)
+    current_scan_id = Column(String, nullable=False)
+    delta_summary = Column(JSON, default=dict)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+

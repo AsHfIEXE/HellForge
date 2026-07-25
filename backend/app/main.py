@@ -195,6 +195,54 @@ async def get_timeline(db: AsyncSession = Depends(get_db)):
     res = await db.execute(select(TimelineEvent).order_by(TimelineEvent.created_at.desc()))
     return res.scalars().all()
 
+# --- Schedules API ---
+@app.get("/api/v1/schedules")
+async def get_schedules(db: AsyncSession = Depends(get_db)):
+    from app.db.models import ScanSchedule
+    res = await db.execute(select(ScanSchedule))
+    return res.scalars().all()
+
+@app.post("/api/v1/schedules")
+async def create_schedule(domain: str, cron: str = "0 0 * * *", db: AsyncSession = Depends(get_db)):
+    from app.db.models import ScanSchedule
+    sched = ScanSchedule(target_domain=domain, cron_expression=cron)
+    db.add(sched)
+    await db.commit()
+    await db.refresh(sched)
+    return sched
+
+# --- Reports API ---
+@app.post("/api/v1/reports/generate")
+async def generate_report(domain: str, format: str = "html", db: AsyncSession = Depends(get_db)):
+    from app.engine.reporter import executive_reporter
+    from app.db.models import Report
+
+    subs_res = await db.execute(select(Subdomain))
+    subs = [{"name": s.name, "risk_score": s.risk_score, "discovery_source": s.discovery_source} for s in subs_res.scalars().all()]
+
+    find_res = await db.execute(select(Finding))
+    findings = [{"title": f.title, "severity": f.severity, "category": f.category, "description": f.description, "remediation": f.remediation, "cvss_score": f.cvss_score} for f in find_res.scalars().all()]
+
+    stats = {"total_assets": len(subs), "total_vulnerabilities": len(findings), "average_risk_score": 55.0}
+
+    if format == "markdown":
+        content = executive_reporter.generate_markdown_report(domain, stats, subs, findings)
+    else:
+        content = executive_reporter.generate_html_report(domain, stats, subs, findings)
+
+    report_record = Report(target_domain=domain, format=format, title=f"Executive Report - {domain}", content=content)
+    db.add(report_record)
+    await db.commit()
+    await db.refresh(report_record)
+
+    return {"id": report_record.id, "target_domain": domain, "format": format, "content": content}
+
+@app.get("/api/v1/reports")
+async def get_reports(db: AsyncSession = Depends(get_db)):
+    from app.db.models import Report
+    res = await db.execute(select(Report).order_by(Report.generated_at.desc()))
+    return res.scalars().all()
+
 # --- AI Copilot API ---
 @app.post("/api/v1/ai/analyze")
 def ai_copilot_analysis(query: str):
@@ -212,3 +260,4 @@ def ai_copilot_analysis(query: str):
         "cvss_estimate": 8.5,
         "references": ["https://owasp.org/www-project-top-ten/"]
     }
+
