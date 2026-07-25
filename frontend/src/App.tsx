@@ -1,6 +1,15 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  ShieldAlert, Radio, Cpu, Network, FileText, Activity, 
+  Terminal, Settings as SettingsIcon, Layers, Server, Search, Bot
+} from 'lucide-react';
+import { D3TopologyGraph } from './components/D3TopologyGraph';
+import { AssetsFeature } from './features/assets/AssetsFeature';
+import { FindingsFeature } from './features/findings/FindingsFeature';
 import { JSIntelFeature } from './features/js_intel/JSIntelFeature';
 import { SchedulesFeature } from './features/schedules/SchedulesFeature';
 import { ReportsFeature } from './features/reports/ReportsFeature';
+
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -228,7 +237,10 @@ export default function App() {
         )}
 
         {activeTab === 'assets' && <AssetsFeature assets={assets} />}
+        {activeTab === 'js_intel' && <JSIntelFeature />}
         {activeTab === 'findings' && <FindingsFeature findings={findings} />}
+        {activeTab === 'schedules' && <SchedulesFeature />}
+        {activeTab === 'reports' && <ReportsFeature />}
 
         {activeTab === 'graph' && (
           <div className="glass-panel" style={{ padding: '24px' }}>
@@ -236,6 +248,7 @@ export default function App() {
             <D3TopologyGraph data={graphData} />
           </div>
         )}
+
 
         {activeTab === 'plugins' && (
           <div className="glass-panel" style={{ padding: '24px' }}>
