@@ -87,8 +87,10 @@ class ArchitectedOrchestrator:
         await asyncio.sleep(0.8) # Wait for plugins topic message cascades
         scan.progress = 70
 
-        # Persist DTOs to Database
+        # Persist DTOs to Database using Batch Operations
         sub_map = {}
+        new_subdomains = []
+
         for asset_evt in self._assets_buffer:
             stmt = select(Subdomain).where(Subdomain.domain_id == domain_obj.id, Subdomain.name == asset_evt.subdomain)
             res = await db.execute(stmt)
@@ -109,12 +111,17 @@ class ArchitectedOrchestrator:
                     tags=asset_evt.tags,
                     discovery_source=asset_evt.discovery_source
                 )
-                db.add(sub_rec)
-                await db.commit()
-                await db.refresh(sub_rec)
+                new_subdomains.append(sub_rec)
             sub_map[asset_evt.subdomain] = sub_rec
 
-        # Persist HTTP Services & Findings
+        if new_subdomains:
+            db.add_all(new_subdomains)
+            await db.commit()
+
+        # Batch Persist HTTP Services & Findings
+        new_services = []
+        new_findings = []
+
         for http_evt in self._http_buffer:
             sub_rec = sub_map.get(http_evt.subdomain)
             if sub_rec:
@@ -128,9 +135,7 @@ class ArchitectedOrchestrator:
                     waf=http_evt.waf_detected,
                     technologies=http_evt.technologies
                 )
-                db.add(svc_rec)
-                await db.commit()
-                await db.refresh(svc_rec)
+                new_services.append(svc_rec)
 
                 for f_evt in self._findings_buffer:
                     if f_evt.subdomain == http_evt.subdomain:
@@ -145,7 +150,12 @@ class ArchitectedOrchestrator:
                             cve_id=f_evt.cve_id,
                             discovery_source=f_evt.discovery_source
                         )
-                        db.add(finding_rec)
+                        new_findings.append(finding_rec)
+
+        if new_services:
+            db.add_all(new_services)
+        if new_findings:
+            db.add_all(new_findings)
 
         # Record Timeline Event
         timeline_ev = TimelineEvent(
@@ -168,6 +178,7 @@ class ArchitectedOrchestrator:
         await db.refresh(scan)
 
         return scan
+
 
 event_orchestrator = ArchitectedOrchestrator()
 

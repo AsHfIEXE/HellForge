@@ -28,20 +28,26 @@ class CategorizedPluginLoader:
                     main_py = os.path.join(plugin_folder, "main.py")
                     if os.path.exists(main_py):
                         try:
-                            spec = importlib.util.spec_from_file_location(f"plugins.{cat}.{folder}", main_py)
-                            module = importlib.util.module_from_spec(spec)
-                            sys.modules[f"plugins.{cat}.{folder}"] = module
-                            spec.loader.exec_module(module)
+                            mod_key = f"plugins.{cat}.{folder}"
+                            if mod_key in sys.modules:
+                                module = sys.modules[mod_key]
+                            else:
+                                spec = importlib.util.spec_from_file_location(mod_key, main_py)
+                                module = importlib.util.module_from_spec(spec)
+                                sys.modules[mod_key] = module
+                                spec.loader.exec_module(module)
 
                             for attr_name in dir(module):
                                 attr = getattr(module, attr_name)
                                 if isinstance(attr, type) and issubclass(attr, BasePlugin) and attr is not BasePlugin:
-                                    instance = attr()
-                                    await instance.initialize(ctx)
-                                    self.loaded_plugins[instance.name] = instance
-                                    logger.info(f"Loaded Plugin [{cat.upper()}]: {instance.name} v{instance.version}")
+                                    if attr.name not in self.loaded_plugins:
+                                        instance = attr()
+                                        await instance.initialize(ctx)
+                                        self.loaded_plugins[instance.name] = instance
+                                        logger.info(f"Loaded Plugin [{cat.upper()}]: {instance.name} v{instance.version}")
                         except Exception as e:
                             logger.error(f"Failed to load plugin {cat}/{folder}: {e}")
+
 
     def list_plugins(self) -> List[Dict[str, Any]]:
         return [
