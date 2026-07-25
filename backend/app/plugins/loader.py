@@ -40,11 +40,12 @@ class CategorizedPluginLoader:
                             for attr_name in dir(module):
                                 attr = getattr(module, attr_name)
                                 if isinstance(attr, type) and issubclass(attr, BasePlugin) and attr is not BasePlugin:
-                                    if attr.name not in self.loaded_plugins:
-                                        instance = attr()
+                                    instance = attr()
+                                    if instance.name not in self.loaded_plugins:
                                         await instance.initialize(ctx)
                                         self.loaded_plugins[instance.name] = instance
                                         logger.info(f"Loaded Plugin [{cat.upper()}]: {instance.name} v{instance.version}")
+
                         except Exception as e:
                             logger.error(f"Failed to load plugin {cat}/{folder}: {e}")
 
