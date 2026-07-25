@@ -244,25 +244,24 @@ export default function App() {
         {activeTab === 'reports' && <ReportsFeature />}
 
         {activeTab === 'graph' && (
-          <div className="glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '20px' }}>Interactive Infrastructure Graph</h3>
+          <div className="pro-card" style={{ padding: '20px' }}>
+            <h3 style={{ fontSize: '0.95rem', marginBottom: '16px', fontWeight: 600 }}>Interactive Infrastructure Graph</h3>
             <D3TopologyGraph data={graphData} />
           </div>
         )}
 
-
         {activeTab === 'plugins' && (
-          <div className="glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '20px' }}>Categorized Plugin Marketplace ({plugins.length})</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+          <div className="pro-card" style={{ padding: '20px' }}>
+            <h3 style={{ fontSize: '0.95rem', marginBottom: '16px', fontWeight: 600 }}>Categorized Plugin Marketplace ({plugins.length})</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
               {plugins.map((p) => (
-                <div key={p.name} style={{ padding: '16px', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                <div key={p.name} style={{ padding: '14px', background: 'var(--bg-dark)', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontWeight: 700, color: 'var(--accent-cyan)' }}>{p.name} v{p.version}</span>
-                    <span className="badge-info">OFFICIAL</span>
+                    <span style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-main)', fontFamily: 'var(--font-mono)' }}>{p.name} v{p.version}</span>
+                    <span className="badge badge-info">OFFICIAL</span>
                   </div>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '8px' }}>{p.description}</p>
-                  <div style={{ marginTop: '8px', fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--accent-purple)' }}>
+                  <p style={{ color: 'var(--text-dim)', fontSize: '0.8rem', marginTop: '6px' }}>{p.description}</p>
+                  <div style={{ marginTop: '8px', fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: 'var(--accent-primary)' }}>
                     Subscribed Topics: {p.subscriptions ? p.subscriptions.join(', ') : 'None'}
                   </div>
                 </div>
@@ -272,45 +271,52 @@ export default function App() {
         )}
 
         {activeTab === 'timeline' && (
-          <div className="glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '20px' }}>Attack Surface Timeline Tracking</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {timeline.map((t) => (
-                <div key={t.id} style={{ padding: '14px', background: 'rgba(0,0,0,0.3)', borderRadius: '8px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>
-                  <span style={{ color: 'var(--accent-orange)' }}>[{new Date(t.created_at).toLocaleTimeString()}]</span> <strong style={{ color: 'var(--text-main)' }}>{t.title}:</strong> {t.description}
+          <div className="pro-card" style={{ padding: '20px' }}>
+            <h3 style={{ fontSize: '0.95rem', marginBottom: '16px', fontWeight: 600 }}>Attack Surface Timeline Tracking</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {timeline.length === 0 ? (
+                <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>
+                  No timeline events logged. Execute a scan to record pipeline activity.
                 </div>
-              ))}
+              ) : (
+                timeline.map((t) => (
+                  <div key={t.id} style={{ padding: '12px', background: 'var(--bg-dark)', borderRadius: '6px', border: '1px solid var(--border-color)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>
+                    <span style={{ color: 'var(--severity-high)', marginRight: '8px' }}>[{new Date(t.created_at).toLocaleTimeString()}]</span> <strong style={{ color: 'var(--text-main)' }}>{t.title}:</strong> {t.description}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
 
         {activeTab === 'ai' && (
-          <div className="glass-panel" style={{ padding: '24px' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--accent-purple)' }}>
-              <Bot /> HellForge AI Security Copilot
+          <div className="pro-card" style={{ padding: '20px' }}>
+            <h3 style={{ fontSize: '0.95rem', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600, color: 'var(--text-main)' }}>
+              <Bot size={18} color="var(--accent-primary)" /> HellForge AI Security Copilot
             </h3>
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '16px' }}>
               <input
                 type="text"
                 value={aiQuery}
                 onChange={(e) => setAiQuery(e.target.value)}
                 placeholder="Ask AI Copilot about threat vectors or remediation..."
-                style={{ flex: 1, padding: '10px 14px', background: 'rgba(0,0,0,0.4)', border: '1px solid var(--border-color)', borderRadius: '8px', color: '#fff', outline: 'none' }}
+                style={{ flex: 1, padding: '8px 12px', background: 'var(--bg-input)', border: '1px solid var(--border-color)', borderRadius: '6px', color: '#fff', outline: 'none', fontSize: '0.85rem' }}
               />
               <button
                 onClick={handleAiAsk}
-                style={{ padding: '10px 20px', background: 'var(--accent-purple)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer' }}
+                style={{ padding: '8px 16px', background: 'var(--accent-primary)', color: '#ffffff', border: 'none', borderRadius: '6px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
               >
                 Analyze Threat Vector
               </button>
             </div>
             {aiResponse && (
-              <div style={{ padding: '20px', background: 'rgba(0,0,0,0.4)', borderRadius: '8px', border: '1px solid var(--accent-purple)' }}>
-                <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'var(--font-mono)', fontSize: '0.9rem', color: 'var(--text-main)' }}>{aiResponse.response}</pre>
+              <div style={{ padding: '16px', background: 'var(--bg-dark)', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
+                <pre style={{ whiteSpace: 'pre-wrap', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--text-main)', lineHeight: 1.5 }}>{aiResponse.response}</pre>
               </div>
             )}
           </div>
         )}
+
       </div>
     </div>
   );
